@@ -99,15 +99,27 @@ app.use('/api/admin', adminRoutes); // ✅ This must come after app is declared
 // Serve uploaded images statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// // Connect to MongoDB and start server
+// mongoose.connect(process.env.MONGO_URI, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// })
+//   .then(() => {
+//     console.log('✅ MongoDB connected');
+//     app.listen(process.env.PORT || 5000, () =>
+//       console.log(`🚀 Server running on port ${process.env.PORT || 5000}`)
+//     );
+//   })
+//   .catch((err) => console.error('❌ MongoDB connection error:', err));
+
 // Connect to MongoDB and start server
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('✅ MongoDB connected');
-    app.listen(process.env.PORT || 5000, () =>
-      console.log(`🚀 Server running on port ${process.env.PORT || 5000}`)
-    );
+    console.log("✅ MongoDB connected");
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
+    });
   })
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });
