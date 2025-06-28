@@ -161,35 +161,6 @@ router.post('/', upload.array('images', 5), async (req, res) => {
 });
 
 // ✅ Update Property
-
-
-
-// router.put('/:id', upload.array('images', 5), async (req, res) => {
-//   try {
-//     const updateData = {
-//       title: req.body.title,
-//       price: req.body.price,
-//       status: req.body.status,
-//       bedrooms: req.body.bedrooms,
-//       bathrooms: req.body.bathrooms,
-//       // add more fields as needed
-//     };
-
-//     if (req.files && req.files.length > 0) {
-//       updateData.imageUrls = req.files.map(file => `/uploads/${file.filename}`);
-//     }
-
-//     const updated = await Property.findByIdAndUpdate(req.params.id, updateData, { new: true });
-
-//     if (!updated) return res.status(404).json({ message: 'Property not found' });
-//     res.json(updated);
-//   } catch (err) {
-//     console.error('❌ Update Error:', err);
-//     res.status(500).json({ message: err.message || 'Failed to update property' });
-//   }
-// });
-
-// ✅ Update Property (REPLACE all existing images if new ones uploaded)
 router.put('/:id', upload.array('images', 5), async (req, res) => {
   try {
     const updateData = {
@@ -198,7 +169,7 @@ router.put('/:id', upload.array('images', 5), async (req, res) => {
       status: req.body.status,
       bedrooms: req.body.bedrooms,
       bathrooms: req.body.bathrooms,
-      // Add more fields as needed
+      // add more fields as needed
     };
 
     if (req.files && req.files.length > 0) {
@@ -208,19 +179,12 @@ router.put('/:id', upload.array('images', 5), async (req, res) => {
     const updated = await Property.findByIdAndUpdate(req.params.id, updateData, { new: true });
 
     if (!updated) return res.status(404).json({ message: 'Property not found' });
-
-    res.json({ success: true, message: 'Property updated', property: updated });
+    res.json(updated);
   } catch (err) {
     console.error('❌ Update Error:', err);
     res.status(500).json({ message: err.message || 'Failed to update property' });
   }
 });
-
-
-
-
-
-
 
 // ✅ Get All Properties
 router.get('/', async (req, res) => {
@@ -281,29 +245,29 @@ router.post("/AdminLogin", async (req, res) => {
 // 
 
 
-// router.put(
-//   "/:id",
-//   upload.array("images", 10), // allow up to 10 images
-//   async (req, res) => {
-//     const files = req.files; // ⬅️ array of files
-//     const { title, price, status, bedrooms, bathrooms } = req.body;
+router.put(
+  "/:id",
+  upload.array("images", 10), // allow up to 10 images
+  async (req, res) => {
+    const files = req.files; // ⬅️ array of files
+    const { title, price, status, bedrooms, bathrooms } = req.body;
 
-//     const imageUrls = files.map((file) => `/uploads/${file.filename}`);
+    const imageUrls = files.map((file) => `/uploads/${file.filename}`);
 
-//     const updateData = {
-//       title,
-//       price,
-//       status,
-//       bedrooms,
-//       bathrooms,
-//       $push: { imageUrls: { $each: imageUrls } }, // append images
-//     };
+    const updateData = {
+      title,
+      price,
+      status,
+      bedrooms,
+      bathrooms,
+      $push: { imageUrls: { $each: imageUrls } }, // append images
+    };
 
-//     try {
-//       await Property.findByIdAndUpdate(req.params.id, updateData);
-//       res.json({ success: true, message: "Property updated" });
-//     } catch (err) {
-//       res.status(500).json({ success: false, message: "Update failed" });
-//     }
-//   }
-// );
+    try {
+      await Property.findByIdAndUpdate(req.params.id, updateData);
+      res.json({ success: true, message: "Property updated" });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Update failed" });
+    }
+  }
+);
